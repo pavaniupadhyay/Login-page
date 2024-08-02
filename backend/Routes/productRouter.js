@@ -1,16 +1,21 @@
+const ensureAuthenticated = require('../Middlewares/Auth');
+
 
 
 const router = require('express').Router();
 
-router.post('/', (req,res)=>{
-  res.status(200).json([
-    {
-      name:"mobile",
-      price:5000
-    },
-    {
-      name:"laptop",
-      price:10000
-    }
-  ])
+router.get('/', ensureAuthenticated, (req, res) => {
+
+    res.status(200).json([
+        {
+            name: "mobile",
+            price: 10000
+        },
+        {
+            name: "tv",
+            price: 20000
+        }
+    ])
 });
+
+module.exports = router;
