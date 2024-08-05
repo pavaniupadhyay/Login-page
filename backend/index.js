@@ -5,7 +5,7 @@ const AuthRouter = require('./Routes/AuthRouter');
 const ProductRouter = require('./Routes/ProductRouter');
 require('dotenv').config();
 require('./Models/db');
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 
 const app = express();
 
