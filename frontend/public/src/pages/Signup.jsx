@@ -4,23 +4,26 @@ import {ToastContainer} from 'react-toastify'
 
 import { handleError, handleSuccess } from '../../utils'
 const Signup = () => {
- const [signupInfo,setSignupInfo]=useState({
-  name: '',
-  email: '',
-  password: ''
- })
- const navigate =useNavigate();
-  const handleChange=(e)=>{
-    const{name,value}=e.target;
-    const CopyLoginInfo={...signupInfo}
-    CopyLoginInfo[name]=value;
-    setSignupInfo(CopyLoginInfo);
-  }
-  const handleSignUp = async (e) => {
+  const [signupInfo, setSignupInfo] = useState({
+    name: '',
+    email: '',
+    password: ''
+})
+
+const navigate = useNavigate();
+const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    const copySignupInfo = { ...signupInfo };
+    copySignupInfo[name] = value;
+    setSignupInfo(copySignupInfo);
+}
+
+const handleSignup = async (e) => {
     e.preventDefault();
     const { name, email, password } = signupInfo;
     if (!name || !email || !password) {
-        return handleError('name, email and password are required');
+        return handleError('name, email and password are required')
     }
     try {
         const url = "http://localhost:8081/auth/signup";
@@ -32,60 +35,66 @@ const Signup = () => {
             body: JSON.stringify(signupInfo)
         });
         const result = await response.json();
-        const { success, message } = result;
+        const { success, message, error } = result;
         if (success) {
-            handleSuccess(message);
+          handleSuccess(message);
             setTimeout(() => {
-                navigate('/signin');
-            }, 1000);
+              navigate('/signin')
+            }, 1000)
+        } else if (error) {
+            const details = error?.details[0].message;
+            handleError(details);
+        } else if (!success) {
+          handleError(message);
         }
+        console.log(result);
     } catch (err) {
-        handleError(err);
+      handleError(err);
     }
-};
-
-      
-  return (
+}
+return (
     <div className='container'>
-      <h1>Signup</h1>
-      <form onSubmit={handleSignUp}>
-        <div>
-          <label htmlFor='name'>name</label>
-          <input 
-          onClick={handleChange}
-          type='text' 
-                 autoFocus
-                 name='name'
-                 placeholder='Enter your name'
-                 />
-        </div>
-        <div>
-          <label htmlFor='email'>email</label>
-          <input 
-           onClick={handleChange}
-          type='text' 
-                 autoFocus
-                 name='email'
-                 placeholder='Enter your email'
-                 />
-        </div>
-        <div>
-          <label htmlFor='password'>password</label>
-          <input 
-           onClick={handleChange}
-          type='text'
-                 name='password'
-                 placeholder='Enter your password'
-                 />
-        </div>
-        <button>Sign Up</button>
-        <span>Alredy have an account?
-          <Link to="/Signin">Signin</Link>
-       </span>
-       <ToastContainer/>
-      </form>
-      </div>
-  )
+        <h1>Signup</h1>
+        <form onSubmit={handleSignup}>
+            <div>
+                <label htmlFor='name'>Name</label>
+                <input
+                    onChange={handleChange}
+                    type='text'
+                    name='name'
+                    autoFocus
+                    placeholder='Enter your name...'
+                    value={signupInfo.name}
+                />
+            </div>
+            <div>
+                <label htmlFor='email'>Email</label>
+                <input
+                    onChange={handleChange}
+                    type='email'
+                    name='email'
+                    placeholder='Enter your email...'
+                    value={signupInfo.email}
+                />
+            </div>
+            <div>
+                <label htmlFor='password'>Password</label>
+                <input
+                    onChange={handleChange}
+                    type='password'
+                    name='password'
+                    placeholder='Enter your password...'
+                    value={signupInfo.password}
+                />
+            </div>
+            <button type='submit'>Signup</button>
+            <span>Already have an account ?
+                <Link to="/login">Login</Link>
+            </span>
+        </form>
+        <ToastContainer />
+    </div>
+)
 }
 
 export default Signup
