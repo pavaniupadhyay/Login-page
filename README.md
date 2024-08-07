@@ -1,1 +1,1 @@
-<h1>AUTHENTICATION</h1>
+<h1>Deploy-MERN-Auth</h1>
